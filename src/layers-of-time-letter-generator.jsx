@@ -117,12 +117,11 @@ function LetterDisplay({ letter, bgColor, frameId, senderName, onReset }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
-      {/* Stationery — responsive width, fixed aspect ratio */}
+      {/* Stationery — responsive width, grows with content */}
       <div ref={letterRef} style={{
         position: "relative", width: "100%", maxWidth: STATIONERY_MAX_W,
-        aspectRatio: `${STATIONERY_MAX_W} / ${Math.round(STATIONERY_MAX_W * STATIONERY_RATIO)}`,
         background: bgColor, borderRadius: 16,
-        padding: "36px 36px 32px", boxSizing: "border-box",
+        padding: "clamp(20px, 5vw, 36px)", boxSizing: "border-box",
         boxShadow: `0 4px 24px ${PALETTE.beige}66`,
         display: "flex", flexDirection: "column",
       }}>
@@ -131,11 +130,11 @@ function LetterDisplay({ letter, bgColor, frameId, senderName, onReset }) {
         {/* Header */}
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: PALETTE.warmGray, margin: "0 0 14px", letterSpacing: 3, textTransform: "uppercase", fontWeight: 600, textAlign: "center" }}>#LayersOfTime</p>
 
-        {/* Letter text */}
-        <div style={{ fontFamily: "'Caveat', cursive", fontSize: 20, lineHeight: 1.85, color: PALETTE.deep, whiteSpace: "pre-wrap", flex: 1 }}>{letter}</div>
+        {/* Letter text — responsive font: smaller on mobile */}
+        <div style={{ fontFamily: "'Caveat', cursive", fontSize: 'clamp(15px, 4vw, 18px)', lineHeight: 1.8, color: PALETTE.deep, whiteSpace: "pre-wrap" }}>{letter}</div>
 
-        {/* Sender name — fixed bottom right */}
-        <p style={{ fontFamily: "'Caveat', cursive", fontSize: 18, color: PALETTE.deep, textAlign: "right", margin: 0, opacity: 0.7 }}>
+        {/* Sender name */}
+        <p style={{ fontFamily: "'Caveat', cursive", fontSize: 'clamp(14px, 3.5vw, 18px)', color: PALETTE.deep, textAlign: "right", marginTop: 10, marginBottom: 0, opacity: 0.7 }}>
           — {senderName || "Anonymous"}
         </p>
       </div>
@@ -177,22 +176,22 @@ export default function LayersOfTimeLetterGenerator() {
     setLoading(true); setError("");
     const recipientLabel = recipient === "other" ? (customRecipient || "Someone") : (RECIPIENTS.find((r) => r.id === recipient)?.label || recipient);
     const sentimentLabel = SENTIMENTS.find((s) => s.id === sentiment)?.label || sentiment;
-    const prompt = `Write a short personal letter (under 100 words) as ONE single paragraph based on these inputs:
+    const prompt = `Write a short personal letter in ONE single paragraph based on these inputs:
 - To: ${recipientLabel}
 - A shared memory or thought: "${memory}"
 - What the writer wants to say: ${sentimentLabel}
 
 Rules:
-- Write as ONE continuous paragraph. No line breaks, no separate closing lines.
+- STRICT LIMIT: 60-80 words maximum. Do not exceed 80 words.
+- Write as ONE continuous paragraph. No line breaks.
 - Write in English only. If the memory is in another language, translate it naturally.
-- Keep it plain and sincere — no dramatic or overly emotional language. Do not embellish.
+- Keep it plain and sincere — no dramatic or overly emotional language.
 - Use the sentiment word ("${sentimentLabel}") at most once.
-- ONLY use what the user provided. Do NOT add details, stories, or scenarios the user did not mention. If the memory is short or vague, keep the letter equally simple.
-- Do NOT add generic filler like "I hope you are doing well" or "take care of yourself."
-- Write as if a real person is speaking — natural, understated, not trying too hard.
+- ONLY use what the user provided. Do NOT add details or scenarios the user did not mention.
+- Do NOT add generic filler like "I hope you are doing well" or "take care."
+- Natural and understated.
 - Do NOT start with "Dear X" or any header.
-- Do NOT end with a signature, sign-off, or name.
-- The paragraph should end naturally without a forced emotional closing.`;
+- Do NOT end with a signature, sign-off, or name.`;
     try {
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
