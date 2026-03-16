@@ -6,9 +6,8 @@ const PALETTE = {
 };
 
 /*
-  Stationery size: 540 x 400 px (at 96dpi = 5.63" x 4.17")
+  Stationery size: 540 x 400 px (at 96dpi = 5.63 inches wide x 4.17 inches tall)
   Landscape, compact fit for ~100 words single paragraph.
-  Tell your designer: 5.63 inches wide × 4.17 inches tall
 */
 const STATIONERY_W = 540;
 const STATIONERY_H = 400;
@@ -176,7 +175,7 @@ export default function LayersOfTimeLetterGenerator() {
     setLoading(true); setError("");
     const recipientLabel = recipient === "other" ? (customRecipient || "Someone") : (RECIPIENTS.find((r) => r.id === recipient)?.label || recipient);
     const sentimentLabel = SENTIMENTS.find((s) => s.id === sentiment)?.label || sentiment;
-    const prompt = `Write a short personal letter (under 100 words) as ONE single paragraph based on these inputs:
+    const prompt = `Write a short personal letter (around 100 words) as ONE single paragraph based on these inputs:
 - To: ${recipientLabel}
 - A shared memory or thought: "${memory}"
 - What the writer wants to say: ${sentimentLabel}
