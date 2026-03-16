@@ -14,8 +14,8 @@ const STATIONERY_MAX_W = 540;
 const STATIONERY_RATIO = 400 / 540; // height / width = 0.741
 
 const RECIPIENTS = [
-  { id: "mom", label: "Mom", emoji: "🤲" },
-  { id: "dad", label: "Dad", emoji: "🫂" },
+  { id: "mom", label: "Mom", emoji: "👩" },
+  { id: "dad", label: "Dad", emoji: "👨" },
   { id: "grandma", label: "Grandma", emoji: "👵" },
   { id: "grandpa", label: "Grandpa", emoji: "👴" },
   { id: "sibling", label: "Sibling", emoji: "🤝" },
