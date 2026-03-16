@@ -6,15 +6,16 @@ const PALETTE = {
 };
 
 /*
-  Stationery size: 540 x 400 px (at 96dpi = 5.63 inches wide x 4.17 inches tall)
-  Landscape, compact fit for ~100 words single paragraph.
+  Stationery: max 540px wide, aspect ratio 540:400 (1.35:1)
+  Responsive — fills screen width on mobile, maxes at 540px on desktop.
+  Tell your designer: 5.63 inches wide × 4.17 inches tall (landscape)
 */
-const STATIONERY_W = 540;
-const STATIONERY_H = 400;
+const STATIONERY_MAX_W = 540;
+const STATIONERY_RATIO = 400 / 540; // height / width = 0.741
 
 const RECIPIENTS = [
-  { id: "mom", label: "Mom", emoji: "👩" },
-  { id: "dad", label: "Dad", emoji: "👨" },
+  { id: "mom", label: "Mom", emoji: "🤲" },
+  { id: "dad", label: "Dad", emoji: "🫂" },
   { id: "grandma", label: "Grandma", emoji: "👵" },
   { id: "grandpa", label: "Grandpa", emoji: "👴" },
   { id: "sibling", label: "Sibling", emoji: "🤝" },
@@ -116,9 +117,10 @@ function LetterDisplay({ letter, bgColor, frameId, senderName, onReset }) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
-      {/* Stationery — fixed size: 480×640px (5" × 6.67") */}
+      {/* Stationery — responsive width, fixed aspect ratio */}
       <div ref={letterRef} style={{
-        position: "relative", width: STATIONERY_W, height: STATIONERY_H,
+        position: "relative", width: "100%", maxWidth: STATIONERY_MAX_W,
+        aspectRatio: `${STATIONERY_MAX_W} / ${Math.round(STATIONERY_MAX_W * STATIONERY_RATIO)}`,
         background: bgColor, borderRadius: 16,
         padding: "36px 36px 32px", boxSizing: "border-box",
         boxShadow: `0 4px 24px ${PALETTE.beige}66`,
@@ -175,7 +177,7 @@ export default function LayersOfTimeLetterGenerator() {
     setLoading(true); setError("");
     const recipientLabel = recipient === "other" ? (customRecipient || "Someone") : (RECIPIENTS.find((r) => r.id === recipient)?.label || recipient);
     const sentimentLabel = SENTIMENTS.find((s) => s.id === sentiment)?.label || sentiment;
-    const prompt = `Write a short personal letter (around 100 words) as ONE single paragraph based on these inputs:
+    const prompt = `Write a short personal letter (under 100 words) as ONE single paragraph based on these inputs:
 - To: ${recipientLabel}
 - A shared memory or thought: "${memory}"
 - What the writer wants to say: ${sentimentLabel}
